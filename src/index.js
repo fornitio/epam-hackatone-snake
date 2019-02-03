@@ -22,24 +22,28 @@
 import { getNextSnakeMove } from './bot';
 import { getBoardAsString, markThePath, getMyHead, getMyBody, } from './utils';
 import { ELEMENT, COMMANDS } from './constants';
+import WebSocket from 'ws';
 
 
-var URL = process.env.GAME_URL || '';
+var URL = process.env.GAME_URL;
+console.log({ URL });
 var url = URL.replace("http", "ws").replace("board/player/", "ws?user=").replace("?code=", "&code=");
+console.log({ url })
 var previousStep = null;
 var socket = new WebSocket(url);
 
-socket.addEventListener('open', function (event) {
+socket.on('open', function open() {
     console.log('Open');
 });
 
-socket.addEventListener('close', function (event) {
+socket.on('close', function open() {
     console.log('Closed');
 });
-
-socket.addEventListener('message', function (event) {
+  
+socket.on('message', function (data) {
+    console.dir(data);
     var pattern = new RegExp(/^board=(.*)$/);
-    var message = event.data;
+    var message = data;
     var parameters = message.match(pattern);
     var board = parameters[1];
     var answer = processBoard(markThePath(board));
@@ -71,30 +75,10 @@ function processBoard(board) {
     logMessage += "Answer: " + answer + "\n";
 
     printBoard(boardString);
-    // printLog(logMessage);
     return answer;
 }
 
 function printBoard(text) {
-    var textarea = document.getElementById("board");
-    if (!textarea) {
-        return;
-    }
-    var size = text.split('\n')[0].length;
-    textarea.cols = size;
-    textarea.rows = size + 1;
-    textarea.value = text;
+    console.log(text);
 }
 
-function printLog(text) {
-    var textarea = document.getElementById("log-area");
-    var addToEnd = document.getElementById("add-to-end");
-    if (!textarea || !addToEnd) {
-        return;
-    }
-    if (addToEnd.checked) {
-        textarea.value = textarea.value + "\n" + text;
-    } else {
-        textarea.value = text + "\n" + textarea.value;
-    }
-}

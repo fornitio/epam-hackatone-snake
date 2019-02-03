@@ -26,12 +26,12 @@ import {
   getMyHead,
 } from './utils';
 import { config } from './config';
+const logger = console.log.bind(console);
 
 // Bot Example
 let prevMove = null;
 let wasAct = false;
 export function getNextSnakeMove(board, logger) {
-    window.logger = logger;
     if (isGameOver(board)) {
         return '';
     }
