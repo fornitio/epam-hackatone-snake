@@ -12,9 +12,13 @@ export const config = {
       ELEMENT.FURY_PILL,
       (getMyBody().length > 4 || getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.STONE : '', 
       (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_UP : '', 
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_LEFT : '', 
+      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_RIGHT : '',
       (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_DOWN : '', 
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_RIGHT : '', 
+      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_LEFT : '', 
+      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_TAIL_END_UP : '', 
+      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_TAIL_END_RIGHT : '', 
+      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_TAIL_END_DOWN : '', 
+      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_TAIL_END_LEFT : '', 
     ];
     return result;
   },
@@ -35,6 +39,10 @@ export const config = {
     [ELEMENT.ENEMY_HEAD_RIGHT]: 6,
     [ELEMENT.ENEMY_HEAD_DOWN]: 6,
     [ELEMENT.ENEMY_HEAD_LEFT]: 6,
+    [ELEMENT.ENEMY_TAIL_END_UP]: 3,
+    [ELEMENT.ENEMY_TAIL_END_RIGHT]: 3,
+    [ELEMENT.ENEMY_TAIL_END_DOWN]: 3,
+    [ELEMENT.ENEMY_TAIL_END_LEFT]: 3,
 
   },
   transparentItems: () => {
