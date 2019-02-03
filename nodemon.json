@@ -4,5 +4,9 @@
   "delay": "2500",
   "env": {
     "GAME_URL": "https://"
+  },
+  "events": {
+    "exit": "npm run start",
+    "crash": "npm run start"
   }
 }
