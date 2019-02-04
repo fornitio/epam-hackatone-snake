@@ -191,6 +191,7 @@ const increaseSiblings = (board, point, step) => {
     const right = p.x < size && (~config.transparentItems().findIndex(x => x == rightToken)) && setRightPlace(board, p, step + 1);
     const bottom = p.y < size && (~config.transparentItems().findIndex(x => x == bottomToken)) && setBottomPlace(board, p, step + 1);
     const left = p.x > 1 && (~config.transparentItems().findIndex(x => x == leftToken)) && setLeftPlace(board, p, step + 1);
+}
 
 const makeWave = (board, step)=> {
     board.forEach((row, y)=>{
