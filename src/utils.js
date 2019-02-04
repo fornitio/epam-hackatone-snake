@@ -170,6 +170,7 @@ export const findSmellIndex = (token) => {
     return config.smell.findIndex(el => el === token);
 }
 
+const setCenterPlace = (board, p, weightCoeff) => board[p.y][p.x] = weightCoeff;
 const setTopPlace = (board, p, weightCoeff) => board[p.y - 1][p.x] = weightCoeff;
 const setRightPlace = (board, p, weightCoeff) => board[p.y][p.x + 1] = weightCoeff;
 const setBottomPlace = (board, p, weightCoeff) => board[p.y + 1][p.x] = weightCoeff;
@@ -190,7 +191,6 @@ const increaseSiblings = (board, point, step) => {
     const right = p.x < size && (~config.transparentItems().findIndex(x => x == rightToken)) && setRightPlace(board, p, step + 1);
     const bottom = p.y < size && (~config.transparentItems().findIndex(x => x == bottomToken)) && setBottomPlace(board, p, step + 1);
     const left = p.x > 1 && (~config.transparentItems().findIndex(x => x == leftToken)) && setLeftPlace(board, p, step + 1);
-}
 
 const makeWave = (board, step)=> {
     board.forEach((row, y)=>{
@@ -252,8 +252,9 @@ export const markThePath = clearBoard => {
 
     const lutBoard = board.slice();
     const markLut = checkLut(getLut(), lutBoard).map( l => {
-        const startSmell = config.smellPrices[l.e] || 5;
-        increaseSiblings(board, l, startSmell);
+        const startSmell = config.smellPrices[l.e] || 20;
+        // increaseSiblings(board, l, startSmell);
+        setCenterPlace(board, l, startSmell + 1);
         return l.e;
     });
     for (let step = 1; step < 68; step++) {

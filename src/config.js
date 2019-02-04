@@ -35,7 +35,8 @@ export const config = {
           'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'O',
           'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z',
           '(', ')', ';', ':', ',', '.', '{', '}', 
-  ],
+  ].reverse(),
+  
   smellPrices : {
     [ELEMENT.GOLD]: 8,
     [ELEMENT.APPLE]: 12,
