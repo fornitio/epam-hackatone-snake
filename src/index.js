@@ -29,7 +29,6 @@ var URL = process.env.GAME_URL;
 console.log({ URL });
 var url = URL.replace("http", "ws").replace("board/player/", "ws?user=").replace("?code=", "&code=");
 console.log({ url })
-var previousStep = null;
 var socket = new WebSocket(url);
 
 socket.on('open', function open() {
@@ -41,20 +40,15 @@ socket.on('close', function open() {
 });
   
 socket.on('message', function (data) {
-    console.dir(data);
     var pattern = new RegExp(/^board=(.*)$/);
     var message = data;
     var parameters = message.match(pattern);
     var board = parameters[1];
     var answer = processBoard(markThePath(board));
-    console.log({ answer, previousStep, l: getMyBody().length });
-    if (previousStep && previousStep === answer) {
-        if (getMyHead() === ELEMENT.HEAD_EVIL || getMyBody().length > 7/* && !wasAct */) {
-            console.log('act');
-            return socket.send(COMMANDS.ACT);
-        }
+    console.log({ answer, l: getMyBody().length });
+    if (getMyHead() === ELEMENT.HEAD_EVIL || getMyBody().length > 7) {
+        return socket.send(`${answer}, ${COMMANDS.ACT}`);
     }
-    previousStep = answer;
     socket.send(answer);
 });
 

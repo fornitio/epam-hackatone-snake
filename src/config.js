@@ -5,20 +5,26 @@ import { getMyBody, getMyHead } from './utils';
 export const config = {
   goals: () => {
     // console.log({myBody: getMyBody().length});
-
+    const isAngry = (getMyHead() === ELEMENT.HEAD_EVIL);
     const result = [
       ELEMENT.GOLD,
       ELEMENT.APPLE,
       ELEMENT.FURY_PILL,
-      (getMyBody().length > 4 || getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.STONE : '', 
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_UP : '', 
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_RIGHT : '',
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_DOWN : '', 
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_HEAD_LEFT : '', 
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_TAIL_END_UP : '', 
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_TAIL_END_RIGHT : '', 
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_TAIL_END_DOWN : '', 
-      (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_TAIL_END_LEFT : '', 
+      (getMyBody().length > 4 || isAngry) ? ELEMENT.STONE : '', 
+      isAngry ? ELEMENT.ENEMY_HEAD_UP : '', 
+      isAngry ? ELEMENT.ENEMY_HEAD_RIGHT : '',
+      isAngry ? ELEMENT.ENEMY_HEAD_DOWN : '', 
+      isAngry ? ELEMENT.ENEMY_HEAD_LEFT : '', 
+      isAngry ? ELEMENT.ENEMY_TAIL_END_UP : '', 
+      isAngry ? ELEMENT.ENEMY_TAIL_END_RIGHT : '', 
+      isAngry ? ELEMENT.ENEMY_TAIL_END_DOWN : '', 
+      isAngry ? ELEMENT.ENEMY_TAIL_END_LEFT : '',
+      isAngry ? ELEMENT.ENEMY_BODY_HORIZONTAL : '', 
+      isAngry ? ELEMENT.ENEMY_BODY_VERTICAL : '', 
+      isAngry ? ELEMENT.ENEMY_BODY_LEFT_DOWN : '', 
+      isAngry ? ELEMENT.ENEMY_BODY_LEFT_UP : '', 
+      isAngry ? ELEMENT.ENEMY_BODY_RIGHT_DOWN : '', 
+      isAngry ? ELEMENT.ENEMY_BODY_RIGHT_UP : '',  
     ];
     return result;
   },
@@ -35,17 +41,24 @@ export const config = {
     [ELEMENT.APPLE]: 12,
     [ELEMENT.STONE]: 4,
     [ELEMENT.FURY_PILL]: 2,
-    [ELEMENT.ENEMY_HEAD_UP]: 6,
-    [ELEMENT.ENEMY_HEAD_RIGHT]: 6,
-    [ELEMENT.ENEMY_HEAD_DOWN]: 6,
-    [ELEMENT.ENEMY_HEAD_LEFT]: 6,
+    [ELEMENT.ENEMY_HEAD_UP]: 3,
+    [ELEMENT.ENEMY_HEAD_RIGHT]: 3,
+    [ELEMENT.ENEMY_HEAD_DOWN]: 3,
+    [ELEMENT.ENEMY_HEAD_LEFT]: 3,
     [ELEMENT.ENEMY_TAIL_END_UP]: 3,
     [ELEMENT.ENEMY_TAIL_END_RIGHT]: 3,
     [ELEMENT.ENEMY_TAIL_END_DOWN]: 3,
     [ELEMENT.ENEMY_TAIL_END_LEFT]: 3,
+    [ELEMENT.ENEMY_BODY_HORIZONTAL]: 3,
+    [ELEMENT.ENEMY_BODY_VERTICAL]: 3,
+    [ELEMENT.ENEMY_BODY_LEFT_DOWN]: 3,
+    [ELEMENT.ENEMY_BODY_LEFT_UP]: 3,
+    [ELEMENT.ENEMY_BODY_RIGHT_DOWN]: 3,
+    [ELEMENT.ENEMY_BODY_RIGHT_UP]: 3,
 
   },
   transparentItems: () => {
+    const isAngry = (getMyHead() === ELEMENT.HEAD_EVIL);
     const result = [
     ELEMENT.NONE,
     ELEMENT.FLYING_PILL,
@@ -54,12 +67,12 @@ export const config = {
     ELEMENT.ENEMY_TAIL_END_UP, 
     ELEMENT.ENEMY_TAIL_END_RIGHT, 
 
-    (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_BODY_HORIZONTAL : '', 
-    (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_BODY_VERTICAL : '', 
-    (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_BODY_LEFT_DOWN : '', 
-    (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_BODY_LEFT_UP : '', 
-    (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_BODY_RIGHT_DOWN : '', 
-    (getMyHead() === ELEMENT.HEAD_EVIL) ? ELEMENT.ENEMY_BODY_RIGHT_UP : '', 
+    isAngry ? ELEMENT.ENEMY_BODY_HORIZONTAL : '', 
+    isAngry ? ELEMENT.ENEMY_BODY_VERTICAL : '', 
+    isAngry ? ELEMENT.ENEMY_BODY_LEFT_DOWN : '', 
+    isAngry ? ELEMENT.ENEMY_BODY_LEFT_UP : '', 
+    isAngry ? ELEMENT.ENEMY_BODY_RIGHT_DOWN : '', 
+    isAngry ? ELEMENT.ENEMY_BODY_RIGHT_UP : '', 
   ];
     return result;
   },
