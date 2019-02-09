@@ -270,7 +270,6 @@ export const markThePath = clearBoard => {
                 const setAslut = lut.x === x && lut.y === y;
                 return setAslut;
             });
-            console.dir({originalLut, x, y});
             tail = originalLut ? originalLut.e : setSmell(el);
         }
         return tail;

@@ -10,7 +10,7 @@ export const config = {
       ELEMENT.GOLD,
       ELEMENT.APPLE,
       ELEMENT.FURY_PILL,
-      (getMyBody().length > 9 || isAngry && getMyBody().length > 7) ? ELEMENT.STONE : '', 
+      (getMyBody().length > 9 || isAngry) ? ELEMENT.STONE : '', 
       isAngry ? ELEMENT.ENEMY_HEAD_UP : '', 
       isAngry ? ELEMENT.ENEMY_HEAD_RIGHT : '',
       isAngry ? ELEMENT.ENEMY_HEAD_DOWN : '', 
@@ -28,19 +28,20 @@ export const config = {
     ];
     return result;
   },
-  smell: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-          'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-          'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-          'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
-          'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'O',
-          'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z',
-          '(', ')', ';', ':', ',', '.', '{', '}', 
+  smell: [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+    'K', 'L', 'M', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+    'V', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    '9', '8', '7', '6', '5', '4', '3', '2', '1', '0',
+    '[', ']', '{', '}', '(', ')', ';', ':', ',', '.'
   ].reverse(),
   
   smellPrices : {
-    [ELEMENT.GOLD]: 8,
-    [ELEMENT.APPLE]: 12,
-    [ELEMENT.STONE]: 4,
+    [ELEMENT.GOLD]: 4,
+    [ELEMENT.APPLE]: 15,
+    [ELEMENT.STONE]: 7,
     [ELEMENT.FURY_PILL]: 2,
     [ELEMENT.ENEMY_HEAD_UP]: 3,
     [ELEMENT.ENEMY_HEAD_RIGHT]: 3,
