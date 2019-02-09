@@ -252,19 +252,26 @@ export const markThePath = clearBoard => {
     }
 
     const lutBoard = board.slice();
-    const markLut = checkLut(getLut(), lutBoard).map( l => {
+    const lutChecked = checkLut(getLut(), lutBoard);
+    const markLut = lutChecked.map( l => {
         const startSmell = config.smellPrices[l.e] || 20;
         // increaseSiblings(board, l, startSmell);
         setCenterPlace(board, l, startSmell + 1);
         return l.e;
     });
-    for (let step = 1; step < 68; step++) {
+    for (let step = 1; step < config.smell.length; step++) {
         makeWave(board, step);
     }
-    const resultBoard = board.map(raw=>raw.map(el => {
+
+    const resultBoard = board.map((raw, y)=>raw.map((el, x) => {
         let tail = el;
         if (el > 1 && el < config.smell.length) {
-            tail = setSmell(el);
+            const originalLut = lutChecked.find(lut => {
+                const setAslut = lut.x === x && lut.y === y;
+                return setAslut;
+            });
+            console.dir({originalLut, x, y});
+            tail = originalLut ? originalLut.e : setSmell(el);
         }
         return tail;
     }).join('')).join('');

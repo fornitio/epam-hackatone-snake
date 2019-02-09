@@ -46,7 +46,8 @@ socket.on('message', function (data) {
     var board = parameters[1];
     var answer = processBoard(markThePath(board));
     console.log({ answer, l: getMyBody().length });
-    if (getMyHead() === ELEMENT.HEAD_EVIL || getMyBody().length > 7) {
+    const shouldAct = (getMyHead() === ELEMENT.HEAD_EVIL && getMyBody().length > 7) || getMyBody().length > 9;
+    if (shouldAct) {
         return socket.send(`${answer}, ${COMMANDS.ACT}`);
     }
     socket.send(answer);

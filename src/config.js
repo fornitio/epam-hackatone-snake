@@ -10,7 +10,7 @@ export const config = {
       ELEMENT.GOLD,
       ELEMENT.APPLE,
       ELEMENT.FURY_PILL,
-      (getMyBody().length > 4 || isAngry) ? ELEMENT.STONE : '', 
+      (getMyBody().length > 9 || isAngry && getMyBody().length > 7) ? ELEMENT.STONE : '', 
       isAngry ? ELEMENT.ENEMY_HEAD_UP : '', 
       isAngry ? ELEMENT.ENEMY_HEAD_RIGHT : '',
       isAngry ? ELEMENT.ENEMY_HEAD_DOWN : '', 
