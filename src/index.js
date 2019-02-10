@@ -20,8 +20,9 @@
  * #L%
  */
 import { getNextSnakeMove } from './bot';
-import { getBoardAsString, markThePath, getMyHead, getMyBody, } from './utils';
+import { getBoardAsString, makeBoardToSmell, getMyHead, getMyBody, } from './utils';
 import { ELEMENT, COMMANDS } from './constants';
+import { config } from './config';
 import WebSocket from 'ws';
 
 
@@ -44,9 +45,9 @@ socket.on('message', function (data) {
     var message = data;
     var parameters = message.match(pattern);
     var board = parameters[1];
-    var answer = processBoard(markThePath(board));
+    var answer = processBoard(makeBoardToSmell(board));
     console.log({ answer, l: getMyBody().length });
-    const shouldAct = (getMyHead() === ELEMENT.HEAD_EVIL) || getMyBody().length > 9;
+    const shouldAct = (getMyHead() === ELEMENT.HEAD_EVIL) || getMyBody().length > config.minBodyLength;
     if (shouldAct) {
         return socket.send(`${answer}, ${COMMANDS.ACT}`);
     }

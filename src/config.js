@@ -2,19 +2,24 @@ import {
   ELEMENT
 } from './constants';
 import { getMyBody, getMyHead } from './utils';
+const minBodyLength = 20;
+
 export const config = {
+  minBodyLength,
   goals: () => {
     // console.log({myBody: getMyBody().length});
     const isAngry = (getMyHead() === ELEMENT.HEAD_EVIL);
+    const isAdult = getMyBody().length > minBodyLength;
+
     const result = [
       ELEMENT.GOLD,
       ELEMENT.APPLE,
       ELEMENT.FURY_PILL,
-      (getMyBody().length > 9 || isAngry) ? ELEMENT.STONE : '', 
-      isAngry ? ELEMENT.ENEMY_HEAD_UP : '', 
-      isAngry ? ELEMENT.ENEMY_HEAD_RIGHT : '',
-      isAngry ? ELEMENT.ENEMY_HEAD_DOWN : '', 
-      isAngry ? ELEMENT.ENEMY_HEAD_LEFT : '', 
+      (getMyBody().length > minBodyLength + 3 || isAngry) ? ELEMENT.STONE : '', 
+      (isAdult || isAngry) ? ELEMENT.ENEMY_HEAD_UP : '', 
+      (isAdult || isAngry) ? ELEMENT.ENEMY_HEAD_RIGHT : '',
+      (isAdult || isAngry) ? ELEMENT.ENEMY_HEAD_DOWN : '', 
+      (isAdult || isAngry) ? ELEMENT.ENEMY_HEAD_LEFT : '', 
       isAngry ? ELEMENT.ENEMY_TAIL_END_UP : '', 
       isAngry ? ELEMENT.ENEMY_TAIL_END_RIGHT : '', 
       isAngry ? ELEMENT.ENEMY_TAIL_END_DOWN : '', 
@@ -37,7 +42,7 @@ export const config = {
     '9', '8', '7', '6', '5', '4', '3', '2', '1', '0',
     '[', ']', '{', '}', '(', ')', ';', ':', ',', '.'
   ].reverse(),
-  
+  unknownSmell: 20,
   smellPrices : {
     [ELEMENT.GOLD]: 4,
     [ELEMENT.APPLE]: 15,
@@ -64,10 +69,10 @@ export const config = {
     const result = [
     ELEMENT.NONE,
     ELEMENT.FLYING_PILL,
-    ELEMENT.ENEMY_TAIL_END_DOWN, 
-    ELEMENT.ENEMY_TAIL_END_LEFT, 
-    ELEMENT.ENEMY_TAIL_END_UP, 
-    ELEMENT.ENEMY_TAIL_END_RIGHT, 
+    isAngry ? ELEMENT.ENEMY_TAIL_END_DOWN : '', 
+    isAngry ? ELEMENT.ENEMY_TAIL_END_LEFT : '', 
+    isAngry ? ELEMENT.ENEMY_TAIL_END_UP : '', 
+    isAngry ? ELEMENT.ENEMY_TAIL_END_RIGHT : '', 
 
     isAngry ? ELEMENT.ENEMY_BODY_HORIZONTAL : '', 
     isAngry ? ELEMENT.ENEMY_BODY_VERTICAL : '', 

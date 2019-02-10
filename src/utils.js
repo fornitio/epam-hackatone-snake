@@ -123,7 +123,7 @@ export function getElementByXY(board, position) {
     return board[size * position.y + position.x];
 }
 
-const activeState = {
+let activeState = {
     lut: [],
     myBody: [],
     myHead: ELEMENT.HEAD_UP,
@@ -132,7 +132,7 @@ const activeState = {
 
 
 const checkLut = (lut, board) => {
-    const lutFilter = item => {
+    const findTrap = item => {
         const p = item;
         const topToken = board[p.y - 1][p.x];
         const rightToken = board[p.y][p.x + 1];
@@ -144,11 +144,14 @@ const checkLut = (lut, board) => {
         // closedHorizontal || console.log({ leftToken, rightToken, closedHorizontal });
         return !(closedHorizontal || closedVertical);
     }
-    const result = lut.filter(lutFilter);
+    const result = lut.filter(findTrap);
+
+
+
     return result;
 }
 
-export const getLut = () => {
+export const getLut = (lut) => {
     const compareDistances = (a, b) => {
         if (a.d < b.d) {
         return -1;
@@ -158,7 +161,10 @@ export const getLut = () => {
         }
         return 0;
     }
-    return activeState.lut.sort(compareDistances);
+    return lut.sort(compareDistances
+        
+
+        );
 } 
 
 export const setSmell = (num) => {
@@ -203,77 +209,99 @@ const makeWave = (board, step)=> {
         // console.log(row.map(el => (''+el).slice(-1)).join(''));  
     });
 }
-
-
-export const markThePath = clearBoard => {
-    const copyBoard = clearBoard.slice();
-    const size = getBoardSize(copyBoard);
-    const head = getHeadPosition(clearBoard) || {};
-    const board = getBoardAsArray(copyBoard).map( el => el.split('') );
-
-    // MAIN LOOPS
-    activeState.myBody = [];
-    activeState.myHead = ELEMENT.HEAD_UP;
-    for (var i = 0; i < size; i++) {
-        const y = i;
-        const row = clearBoard.substring(i * size, (i + 1) * size);
-        const foundMyBodyParts = [...row].map((el, x) => {
-            if (config.bodyParts.some(part => part === el)) {
-                if (el === ELEMENT.HEAD_EVIL) {
-                    activeState.stepCounter--;
-                    if (activeState.stepCounter > 0) {
-                        activeState.myHead = ELEMENT.HEAD_EVIL;
-                    }
-                }
-                
-                return el;
-            }
-        });
-        activeState.myBody = [...activeState.myBody, ...(foundMyBodyParts.filter(f=>f != null))];
-    }
-    if (activeState.myHead !== ELEMENT.HEAD_EVIL) {
-        activeState.stepCounter = 10;
-    }
-    console.log({ 'stepsLast': activeState.stepCounter});
-
-    activeState.lut = [];
-    for (var i = 0; i < size; i++) {
+const findLutItems = (clearBoard, size, head, goals) => {
+    let lut = [];
+    for (let i = 0; i < size; i++) {
         const y = i;
         const row = clearBoard.substring(i * size, (i + 1) * size);
 
         const foundItems = [...row].map((el, x) => {
-            if (config.goals().some(goal => goal === el)) {
+            if (goals().some(goal => goal === el)) {
                 const distance = Math.sqrt((head.x - x)**2 + (head.y - y)**2);
                 return { e: el, d: distance, x, y }
             }
         });
+        lut = [...lut, ...(foundItems.filter(f=>f != null))];
+    }
+    return lut;
+}
 
-        activeState.lut = [...activeState.lut, ...(foundItems.filter(f=>f != null))];
+const defineMyBody = (clearBoard, size, myParts, stepCounter, {HEAD_UP, HEAD_EVIL}) => {
+    let myBody = [];
+    let myHead = HEAD_UP;
+
+    for (var i = 0; i < size; i++) {
+        const y = i;
+        const row = clearBoard.substring(i * size, (i + 1) * size);
+        const foundMyBodyParts = [...row].map((el, x) => {
+            if (myParts.some(part => part === el)) {
+                if (el === HEAD_EVIL) {
+                    stepCounter--;
+                    if (stepCounter > 0) {
+                        myHead = HEAD_EVIL;
+                    }
+                }           
+                return el;
+            }
+        });
+        myBody = [...myBody, ...(foundMyBodyParts.filter(f=>f != null))];
     }
 
-    const lutBoard = board.slice();
-    const lutChecked = checkLut(getLut(), lutBoard);
-    const markLut = lutChecked.map( l => {
-        const startSmell = config.smellPrices[l.e] || 20;
-        // increaseSiblings(board, l, startSmell);
-        setCenterPlace(board, l, startSmell + 1);
-        return l.e;
-    });
-    for (let step = 1; step < config.smell.length; step++) {
-        makeWave(board, step);
+    if (myHead !== HEAD_EVIL) {
+        stepCounter = 10;
     }
+    return {stepCounter, myBody, myHead}
+}
 
-    const resultBoard = board.map((raw, y)=>raw.map((el, x) => {
+export const makeBoardToSmell = clearBoard => {
+    const size = getBoardSize(clearBoard.slice());
+    const head = getHeadPosition(clearBoard) || {};
+    const board = getBoardAsArray(clearBoard.slice()).map( el => el.split('') );
+    let {stepCounter, myBody, myHead} = defineMyBody(clearBoard, size, config.bodyParts, activeState.stepCounter, ELEMENT);
+
+    activeState = {...activeState, stepCounter, myBody, myHead}
+
+    console.log({ 'stepsLast': activeState.stepCounter});
+
+    activeState.lut = findLutItems(clearBoard, size, head, config.goals);
+
+    const lutChecked = checkLut(getLut(activeState.lut), [...board]);
+
+    const makeNewWavedBoard = (board, lutChecked, {smellPrices, smell, unknownSmell}) => {
+        const markLutForWaves = unknownSmell => lutItem => {
+            // lutItem: { e: el, d: distance, x, y }
+            const startSmell = smellPrices[lutItem.e] || unknownSmell;
+            // increaseSiblings(board, lutItem, startSmell);
+            setCenterPlace(board, lutItem, startSmell + 1);
+            return lutItem.e;
+        }
+        lutChecked.map(markLutForWaves(unknownSmell));
+
+        for (let step = 1; step < smell.length; step++) {
+            makeWave(board, step);
+        }
+        return board;
+    };
+
+    const convertToSmells = (el, x, y, lutChecked, setSmell, {smell}) => {
         let tail = el;
-        if (el > 1 && el < config.smell.length) {
+        if (el > 1 && el < smell.length) {
             const originalLut = lutChecked.find(lut => {
+                // lutItem: { e: el, d: distance, x, y }
                 const setAslut = lut.x === x && lut.y === y;
                 return setAslut;
             });
             tail = originalLut ? originalLut.e : setSmell(el);
         }
         return tail;
-    }).join('')).join('');
+    }
 
-    return resultBoard;
+    const smelledBoard = 
+        makeNewWavedBoard([...board], lutChecked, config)
+        .map((raw, y)=>raw.map((el, x) => 
+                convertToSmells(el, x, y, lutChecked, setSmell, config)
+            ).join('')
+        ).join('');
+
+    return smelledBoard;
 }
